@@ -1,9 +1,9 @@
+//Compiling this code will generate a test page.
 package main
 
 import (
 	"fmt"
 	"io/ioutil"
-	"net/http"
 )
 
 type Page struct {
@@ -13,12 +13,7 @@ type Page struct {
 
 var err error
 
-func viewHandler(w http.ResponseWriter, r *http.Request) {
-	title := r.URL.Path[len("/view/"):]
-	p, _ := loadPage(title)
-	fmt.Fprintf(w, "<h1>%s</h1><div>%s</div>", p.Title, p.Body)
-}
-
+//Save new pages
 func (p *Page) save() error {
 	filename := p.Title + ".txt"
 	return ioutil.WriteFile(filename, p.Body, 0600)
@@ -35,6 +30,8 @@ func loadPage(title string) (*Page, error) {
 }
 
 func main() {
-	http.HandleFunc("/view/", viewHandler)
-	http.ListenAndServe(":8081", nil)
+	p1 := &Page{Title: "TestPage", Body: []byte("This is a sample Page.")}
+	p1.save()
+	p2, _ := loadPage("TestPage")
+	fmt.Println(string(p2.Body))
 }
