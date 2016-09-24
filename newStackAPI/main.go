@@ -1,3 +1,4 @@
+//go run ./*.go
 package main
 
 import (
