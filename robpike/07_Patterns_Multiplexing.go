@@ -17,7 +17,7 @@ func boring(msg string) <-chan string {
 	return c
 }
 
-func fanIn(input1, input2 <-chan string) <-chan string { //joins to channel functions together into one
+func fanIn(input1, input2 <-chan string) <-chan string { //joins two channel functions together into one
 	c := make(chan string)
 	go func() {
 		for {
