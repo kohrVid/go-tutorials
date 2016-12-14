@@ -14,10 +14,10 @@ func main() {
 	file, _ := os.Create("qrcode.png")
 	defer file.Close()
 
-	GenerateQRCode(file, "555-2368")
+	GenerateQRCode(file, "555-2368", Version(1))
 }
 
-func GenerateQRCode(w io.Writer, code string) error {
+func GenerateQRCode(w io.Writer, code string, version Version) error {
 	img := image.NewNRGBA(image.Rect(0, 0, 21, 21))
 	return png.Encode(w, img)
 }
