@@ -2,9 +2,25 @@ package main
 
 import (
 	"bytes"
+	"errors"
 	"image/png"
 	"testing"
 )
+
+type ErrorWriter struct{}
+
+func (e *ErrorWriter) Write(b []byte) (int, error) {
+	return 0, errors.New("Expected error")
+}
+
+func TestGenerateQRCodePropagatesErrors(t *testing.T) {
+	w := new(ErrorWriter)
+	err := GenerateQRCode(w, "555-2368")
+
+	if err == nil || err.Error() != "Expected error" {
+		t.Errorf("Error not propagated correctly, got %v", err)
+	}
+}
 
 func TestGenerateQRCodeReturnsValue(t *testing.T) {
 	buffer := new(bytes.Buffer)

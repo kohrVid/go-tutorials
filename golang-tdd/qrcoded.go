@@ -17,7 +17,9 @@ func main() {
 	GenerateQRCode(file, "555-2368")
 }
 
-func GenerateQRCode(w io.Writer, code string) {
-	img := image.NewRGBA(image.Rect(0, 0, 21, 21))
-	_ = png.Encode(w, img)
+func GenerateQRCode(w io.Writer, code string) error {
+	img := image.NewNRGBA(image.Rect(0, 0, 21, 21))
+	return png.Encode(w, img)
 }
+
+type Version int8
