@@ -18,8 +18,13 @@ func main() {
 }
 
 func GenerateQRCode(w io.Writer, code string, version Version) error {
-	img := image.NewNRGBA(image.Rect(0, 0, 21, 21))
+	size := version.PatternSize()
+	img := image.NewNRGBA(image.Rect(0, 0, size, size))
 	return png.Encode(w, img)
 }
 
 type Version int8
+
+func (v Version) PatternSize() int {
+	return 4*int(v) + 17
+}
