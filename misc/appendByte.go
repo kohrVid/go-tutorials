@@ -10,10 +10,12 @@ func main() {
 	p := []byte{2, 3, 5}
 	p = AppendByte(p, 7, 11, 13)
 	fmt.Println(p)
-	mu := []int{1, 2, 3, 4, 5, 6, 7}
+	mu := []int{1, 2, 4, 4, 5, 6, 7}
 	nu := mu[1:3]
+	zu := mu[1:3:3]
 	fmt.Printf("length of %s is %d and its capacity is %d\n", "mu", len(mu), cap(mu))
 	fmt.Printf("length of %s is %d and its capacity is %d\n", "nu", len(nu), cap(nu))
+	fmt.Printf("length of %s is %d and its capacity is %d\n", "zu", len(zu), cap(zu))
 	for i := range mu {
 		fmt.Printf("%d,", mu[i])
 	}
