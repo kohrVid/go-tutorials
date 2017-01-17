@@ -17,16 +17,39 @@ type Song struct {
 }
 
 func main() {
-	if len(os.Args) == 1 || !strings.HasSuffix(os.Args[1], ".m3u") {
-		fmt.Printf("usage: %s <file.m3u>\n", filepath.Base(os.Args[0]))
-		os.Exit(1)
+	if len(os.Args) == 1 {
+		usageMessage()
+	} else if strings.HasSuffix(os.Args[1], ".m3u") {
+		fromM3u(os.Args[1])
+	} else if strings.HasSuffix(os.Args[1], ".pls") {
+		fromPls(os.Args[1])
+	} else {
+		usageMessage()
 	}
 
-	if rawBytes, err := ioutil.ReadFile(os.Args[1]); err != nil {
+}
+
+func usageMessage() {
+	fmt.Printf("usage: %s <file.[pls|m3u]>\n", filepath.Base(os.Args[0]))
+	os.Exit(1)
+}
+
+func fromM3u(file_name string) {
+	if rawBytes, err := ioutil.ReadFile(file_name); err != nil {
 		log.Fatal(err)
 	} else {
 		songs := readM3uPlaylist(string(rawBytes))
 		writePlsPlaylist(songs)
+	}
+}
+
+func fromPls(file_name string) {
+	if rawBytes, err := ioutil.ReadFile(file_name); err != nil {
+		log.Fatal(err)
+	} else {
+		songs := readPlsPlaylist(string(rawBytes))
+		fmt.Println(songs)
+		writeM3uPlaylist(songs)
 	}
 }
 
@@ -38,9 +61,28 @@ func readM3uPlaylist(data string) (songs []Song) {
 			continue
 		}
 		if strings.HasPrefix(line, "#EXTINF:") {
-			fmt.Println("true")
 			song.Title, song.Seconds = parseExtinfLine(line)
-			fmt.Println(parseExtinfLine(line))
+		} else {
+			song.Filename = strings.Map(mapPlatformDirSeparator, line)
+		}
+		if song.Filename != "" && song.Title != "" && song.Seconds != 0 {
+			songs = append(songs, song)
+			song = Song{}
+		}
+	}
+	return songs
+}
+
+func readPlsPlaylist(data string) (songs []Song) {
+	var song Song
+	for i, line := range strings.Split(data, "\n") {
+		line = strings.TrimSpace(line)
+		if strings.HasPrefix(line, "Title") {
+			song.Title = line[7+len(string(i)):]
+		} else if strings.HasPrefix(line, "File") {
+			song.Filename = line[6+len(string(i)):]
+		} else if strings.HasPrefix(line, "Length") {
+			song.Seconds, _ = strconv.Atoi(line[8+len(string(i)):])
 		} else {
 			song.Filename = strings.Map(mapPlatformDirSeparator, line)
 		}
@@ -77,7 +119,6 @@ func mapPlatformDirSeparator(char rune) rune {
 
 func writePlsPlaylist(songs []Song) {
 	fmt.Println("[playlist]")
-	fmt.Println(songs)
 	for i, song := range songs {
 		i++
 		fmt.Printf("File%d=%s\n", i, song.Filename)
@@ -85,4 +126,12 @@ func writePlsPlaylist(songs []Song) {
 		fmt.Printf("Length%d=%d\n", i, song.Seconds)
 	}
 	fmt.Printf("NumberOfEntries=%d\nVersion=2\n", len(songs))
+}
+
+func writeM3uPlaylist(songs []Song) {
+	for i, song := range songs {
+		i++
+		fmt.Println(song.Filename)
+		fmt.Printf("#EXTINF:%d,%s\n", song.Seconds, song.Title)
+	}
 }
