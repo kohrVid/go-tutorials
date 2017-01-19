@@ -11,11 +11,11 @@ func main() {
 	if len(os.Args) < 2 {
 		usageMessage()
 	} else {
-		name := os.Args[1]
+		name := strings.ToUpper(os.Args[1])
 		suffix := dedupe(name[1:])
 		scoreString := handleCharacters(suffix)
 		scoreSlice := strings.Split(scoreString, ",")
-		fmt.Printf("Your score is: %v%v\n", strings.ToUpper(name[:1]), strings.Join(handleScore(scoreSlice), ""))
+		fmt.Printf("Your score is: %v%v\n", name[:1], strings.Join(handleScore(scoreSlice), ""))
 
 	}
 }
@@ -38,34 +38,34 @@ func dedupe(name string) string {
 
 func handleCharacters(input string) string {
 	replacer := strings.NewReplacer(
-		"a", "",
-		"e", "",
-		"i", "",
-		"o", "",
-		"u", "",
-		"y", "",
-		"h", "",
-		"w", "",
-		"b", "1,",
-		"f", "1,",
-		"p", "1,",
-		"v", "1,",
-		"c", "2,",
-		"g", "2,",
-		"j", "2,",
-		"k", "2,",
-		"q", "2,",
-		"s", "2,",
-		"x", "2,",
-		"z", "2,",
-		"d", "3,",
-		"t", "3,",
-		"l", "4,",
-		"m", "5,",
-		"n", "5,",
-		"r", "6,",
+		"A", "",
+		"E", "",
+		"I", "",
+		"O", "",
+		"U", "",
+		"Y", "",
+		"H", "",
+		"W", "",
+		"B", "1,",
+		"F", "1,",
+		"P", "1,",
+		"V", "1,",
+		"C", "2,",
+		"G", "2,",
+		"J", "2,",
+		"K", "2,",
+		"Q", "2,",
+		"S", "2,",
+		"X", "2,",
+		"Z", "2,",
+		"D", "3,",
+		"T", "3,",
+		"L", "4,",
+		"M", "5,",
+		"N", "5,",
+		"R", "6,",
 	)
-	return replacer.Replace(strings.ToLower(input))
+	return replacer.Replace(input)
 }
 
 func handleScore(arr []string) []string {
