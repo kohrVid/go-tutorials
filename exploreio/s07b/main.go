@@ -9,8 +9,8 @@ package main
 import (
 	"fmt"
 	"io"
-	//"log"
-	//"os"
+	"log"
+	"os"
 	"strings"
 )
 
@@ -19,8 +19,8 @@ func main() {
 
 	// TODO: Print the string "io.Reader" to stdout (4 lines).
 	section := io.NewSectionReader(r, 5, 9)
-	//if err != nil {
-	//log.Fatal(err)
-	//}
-	fmt.Println(string(section)) // for readability
+	if _, err := io.Copy(os.Stdout, section); err != nil {
+		log.Fatal(err)
+	}
+	fmt.Println("") // for readability
 }

@@ -11,6 +11,8 @@
 package main
 
 import (
+	"io"
+	"log"
 	"os"
 	"text/tabwriter"
 )
@@ -21,8 +23,16 @@ func main() {
 
 	// TODO: Read tabulated data from standard in
 	//       and write it to the tabwriter (3 lines).
-	// ...
-	// ...
-	// ...
+	/*
+		//Old solution
+		file, err := os.Open("hello.tsv")
+		if _, err = io.Copy(w, file); err != nil {
+			log.Fatal(err)
+		}
+	*/
+	if _, err := io.Copy(w, os.Stdin); err != nil {
+		log.Fatal(err)
+	}
+
 	w.Flush()
 }

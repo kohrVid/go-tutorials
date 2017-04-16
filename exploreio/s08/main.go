@@ -15,6 +15,12 @@ import (
 
 func main() {
 	r := strings.NewReader(`Strings can be readers, too.`)
+	buf := make([]byte, 7)
+	if _, err := io.ReadFull(r, buf); err != nil {
+		log.Fatal(err)
+	}
+	fmt.Println(string(buf))
+
 	// TODO: Read the first 7 bytes of the string into a byte slice,
 	//       then print to stdout (5 lines).
 }
